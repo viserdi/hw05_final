@@ -1,6 +1,6 @@
 from django.test import Client, TestCase
 
-from .const_test import CORE_URL_404
+from .test_const import CORE_URL_404
 
 
 class CoreURLTests(TestCase):

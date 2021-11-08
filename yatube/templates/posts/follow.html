@@ -1,0 +1,15 @@
+{% extends 'base.html' %}  
+{% block title %}
+  Ваши подписки
+{% endblock %}
+{% load thumbnail %}
+{% block content %}
+  <div class="container py-1">
+    <h1>Ваши подписки</h1>
+    {% include 'posts/includes/switcher.html' %}
+    {% for post in page_obj %}
+      {% include 'posts/includes/posts_list.html'%}
+    {% endfor %}
+  </div>
+  {% include 'posts/includes/paginator.html' %}
+{% endblock %}

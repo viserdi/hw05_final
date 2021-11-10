@@ -7,6 +7,11 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ('text', 'group', 'image')
+        help_texts = {
+            'text': 'Тест поста',
+            'group': 'Группа, к которой относится пост',
+            'image': 'Картинка для поста'
+        }
 
     def clean_text(self):
         data = self.cleaned_data.get('text')
@@ -19,6 +24,9 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('text',)
+        help_texts = {
+            'text': 'Текст Вашего комментария',
+        }
 
     def clean_text(self):
         data = self.cleaned_data.get('text')

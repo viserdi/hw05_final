@@ -10,7 +10,7 @@ from ..forms import PostForm
 from ..models import Group, Post, User
 from .test_const import (CREATE_URL, FORM_GROUP_DESCRIPTION, FORM_GROUP_SLUG,
                          FORM_GROUP_TITLE, FORM_POST_TEXT, PROFILE2_URL,
-                         USERNAME2)
+                         SMALL_GIF, USERNAME2)
 
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
@@ -49,17 +49,9 @@ class PostFormTests(TestCase):
     def test_create_post_form_with_pic(self):
         """Проверка появления новой записи с картинкой в БД"""
         posts_count = Post.objects.count()
-        small_gif = (
-            b'\x47\x49\x46\x38\x39\x61\x02\x00'
-            b'\x01\x00\x80\x00\x00\x00\x00\x00'
-            b'\xFF\xFF\xFF\x21\xF9\x04\x00\x00'
-            b'\x00\x00\x00\x2C\x00\x00\x00\x00'
-            b'\x02\x00\x01\x00\x00\x02\x02\x0C'
-            b'\x0A\x00\x3B'
-        )
         uploaded = SimpleUploadedFile(
             name='small.gif',
-            content=small_gif,
+            content=SMALL_GIF,
             content_type='image/gif'
         )
         form_data = {
@@ -86,6 +78,32 @@ class PostFormTests(TestCase):
                 text=FORM_POST_TEXT,
                 image='posts/small.gif',
             ).exists()
+        )
+
+    def test_create_post_form_with_garbage(self):
+        """Проверка, что пост не создастся, если передать файл
+        не являющийся картинкой
+        """
+        posts_count = Post.objects.count()
+        uploaded = SimpleUploadedFile(
+            name='small.txt',
+            content=SMALL_GIF,
+            content_type='image/gif'
+        )
+        form_data = {
+            'text': FORM_POST_TEXT,
+            'image': uploaded,
+        }
+        self.authorized_client.post(
+            CREATE_URL,
+            data=form_data,
+            follow=True
+        )
+
+        self.assertEqual(
+            Post.objects.count(),
+            posts_count,
+            'Новый пост появился'
         )
 
     def test_edit_post_form(self):

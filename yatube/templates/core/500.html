@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Custom 500{% endblock %}
+{% block header %}
+<header>
+    <h3 align="center">Упс, что-то пошло не так...</h3>
+</header>
+{% endblock%}
 {% block content %}
-    <h1>Custom 500</h1>
+    <h1 align="center">Ошибка сервера 500</h1>
 {% endblock %}

@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Custom 404{% endblock %}
+{% block header %}
+<header>
+    <h3 align="center">Упс, что-то пошло не так...</h3>
+</header>
+{% endblock%}
 {% block content %}
   <h1>Custom 404</h1>
   <p>Страницы с адресом {{ path }} не существует</p>

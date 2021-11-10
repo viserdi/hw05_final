@@ -18,10 +18,12 @@
     </title>     
   </head>
   
-  <body>       
+  <body>
+  {% block header %}       
     <header>
       {% include "includes/header.html" %}
     </header>
+  {% endblock %}
     <main>
       {% block content %}
         Контент не подвезли :(

@@ -75,6 +75,13 @@ class Comment(models.Model):
         auto_now_add=True
     )
 
+    class Meta:
+        verbose_name_plural = 'Комментарии'
+        ordering = ('-created',)
+
+    def __str__(self):
+        return self.text[:15]
+
 
 class Follow(models.Model):
     user = models.ForeignKey(
@@ -89,3 +96,10 @@ class Follow(models.Model):
         related_name='following',
         verbose_name='автор'
     )
+
+    class Meta:
+        unique_together = ('user', 'author')
+        verbose_name_plural = 'Подписки'
+
+    def __str__(self):
+        return self.user.username

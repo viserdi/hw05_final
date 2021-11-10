@@ -37,9 +37,8 @@ def group_posts(request, slug):
 
 def profile(request, username):
     author = User.objects.get(username=username)
-    post = Post.objects.filter(author=author)
-    count = post.count()
-    paginator = Paginator(post, s.POSTS_COUNT)
+    posts = Post.objects.filter(author=author)
+    paginator = Paginator(posts, s.POSTS_COUNT)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     is_profile = True
@@ -54,9 +53,9 @@ def profile(request, username):
         if author in authors:
             following = True
     context = {
+        'posts': posts,
         'author': author,
         'page_obj': page_obj,
-        'count': count,
         'is_profile': is_profile,
         'following': following,
         'its_me': its_me,
@@ -71,14 +70,14 @@ def post_detail(request, post_id):
         comments = Comment.objects.filter(post=post)
     except Comment.DoesNotExist:
         comments = None
-    count = Post.objects.filter(author=post.author).count()
+    posts = Post.objects.filter(author=post.author)
     title = post.text[:30]
     context = {
         'comments': comments,
         'form': form,
         'post': post,
+        'posts': posts,
         'title': title,
-        'count': count,
     }
     return render(request, 'posts/post_detail.html', context)
 
@@ -151,9 +150,7 @@ def add_comment(request, post_id):
 
 @login_required
 def follow_index(request):
-    follow_list = Follow.objects.filter(user=request.user)
-    authors = [fol.author for fol in follow_list]
-    post_list = Post.objects.filter(author__in=authors)
+    post_list = Post.objects.filter(author__following__user=request.user)
     paginator = Paginator(post_list, s.POSTS_COUNT)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)

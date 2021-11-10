@@ -13,8 +13,8 @@ from .test_const import (COMMENT_TEXT, CREATE_URL, FOLLOW_POST_TEXT,
                          FOLLOW_URL, GROUP1_URL, GROUP2_DESCRIPTION,
                          GROUP2_SLUG, GROUP2_TITLE, GROUP2_URL,
                          GROUP_DESCRIPTION, GROUP_SLUG, GROUP_TITLE, INDEX_URL,
-                         POST_TEXT, PROFILE_URL, USERNAME1, USERNAME2,
-                         USERNAME3)
+                         POST_TEXT, PROFILE_URL, SMALL_GIF, USERNAME1,
+                         USERNAME2, USERNAME3)
 
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
@@ -199,12 +199,6 @@ class PostViewsTest(TestCase):
             self.post.id,
             'Неверный вывод поста в post_detail'
         )
-        count = Post.objects.filter(author=self.post.author).count()
-        self.assertEqual(
-            response.context['count'],
-            count,
-            'Неверно посчитано кол-во постов автора'
-        )
         self.assertEqual(
             response.context['title'],
             self.post.text[:30],
@@ -355,17 +349,9 @@ class PostViewsTest(TestCase):
     def test_new_post_with_pic_on_different_pages(self):
         """Проверка передачи картинки через context на разные страницы."""
         cache.clear()
-        small_gif = (
-            b'\x47\x49\x46\x38\x39\x61\x02\x00'
-            b'\x01\x00\x80\x00\x00\x00\x00\x00'
-            b'\xFF\xFF\xFF\x21\xF9\x04\x00\x00'
-            b'\x00\x00\x00\x2C\x00\x00\x00\x00'
-            b'\x02\x00\x01\x00\x00\x02\x02\x0C'
-            b'\x0A\x00\x3B'
-        )
         uploaded = SimpleUploadedFile(
             name='small.gif',
-            content=small_gif,
+            content=SMALL_GIF,
             content_type='image/gif'
         )
         new_post = Post.objects.create(

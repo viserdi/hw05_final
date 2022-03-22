@@ -72,7 +72,8 @@ class Comment(models.Model):
     )
     created = models.DateTimeField(
         'Дата публикации',
-        auto_now_add=True
+        auto_now_add=True,
+        db_index=True
     )
 
     class Meta:
@@ -100,7 +101,7 @@ class Follow(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'author'],
+                fields=('user', 'author'),
                 name='unique_follow'
             )
         ]
